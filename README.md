@@ -120,7 +120,7 @@ The second row shows, in order of priority:
 - Display sound level on the web page
 - Add temperature, humidity, or light sensors
 - Add an RTC module such as DS3231 for timekeeping without Wi-Fi
-- Upgrade to ESP32-S3 and an I²S microphone for offline voice-command experiments
+- Add voice-command recognition for hands-free timer and alarm control; an ESP32-S3 with PSRAM and an I²S microphone is recommended for offline command recognition
 
 ## License
 
