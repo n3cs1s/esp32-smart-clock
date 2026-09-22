@@ -4,6 +4,8 @@
 #include <time.h>
 #include <Preferences.h>
 #include <LiquidCrystal.h>
+#include "CountdownTimer.h"
+#include "AlarmClock.h"
 
 //const char* WIFI_NAME = "";
 //const char* WIFI_PASSWORD = "";
@@ -24,150 +26,9 @@ const int MIC = 34; // Microphone on g34
 const int BUZZER = 26;
 const int SAMPLES = 300;
 
-class CountdownTimer {
-  private:
-    uint32_t remainingSeconds = 0;
-    bool running = false;
-    bool created = false;
-    unsigned long lastTick = 0;
-
-  public:
-    bool create(uint32_t seconds) {
-      if (seconds == 0) return false;
-
-      remainingSeconds = seconds;
-      running = false;
-      created = true;
-      lastTick = millis();
-      return true;
-    }
-
-    bool start() {
-      if (!created || remainingSeconds == 0) return false;
-
-      running = true;
-      lastTick = millis();
-      return true;
-    }
-
-    void stop() {
-      running = false;
-    }
-
-    void clear() {
-      running = false;
-      created = false;
-      remainingSeconds = 0;
-    }
-
-    // Повертає true один раз, коли час завершився
-    bool update() {
-      if (!running || remainingSeconds == 0) return false;
-
-      unsigned long now = millis();
-      uint32_t elapsed = (now - lastTick) / 1000;
-
-      if (elapsed == 0) return false;
-
-      lastTick += elapsed * 1000;
-
-      if (elapsed >= remainingSeconds) {
-        remainingSeconds = 0;
-        running = false;
-        return true;
-      }
-
-      remainingSeconds -= elapsed;
-      return false;
-    }
-
-    bool exists() {
-      return created;
-    }
-
-    bool isRunning() {
-      return running;
-    }
-
-    uint32_t getRemaining() {
-      return remainingSeconds;
-    }
-};
 
 CountdownTimer timer;
 
-class AlarmClock {
-  private:
-    uint8_t alarmHour = 0;
-    uint8_t alarmMinute = 0;
-
-    bool created = false;
-    bool enabled = false;
-
-    int lastTriggeredDay = -1;
-
-  public:
-    bool create(uint8_t hour, uint8_t minute) {
-      if (hour > 23 || minute > 59) return false;
-
-      alarmHour = hour;
-      alarmMinute = minute;
-      created = true;
-      enabled = false;
-      lastTriggeredDay = -1;
-      return true;
-    }
-
-    bool start() {
-      if (!created) return false;
-
-      enabled = true;
-      return true;
-    }
-
-    void stop() {
-      enabled = false;
-    }
-
-    void clear() {
-      created = false;
-      enabled = false;
-      lastTriggeredDay = -1;
-    }
-
-    // Повертає true лише один раз за день у задану хвилину
-    bool update(const tm& timeinfo) {
-      if (!created || !enabled) return false;
-
-      int today = timeinfo.tm_year * 366 + timeinfo.tm_yday;
-
-      if (timeinfo.tm_hour == alarmHour &&
-          timeinfo.tm_min == alarmMinute &&
-          lastTriggeredDay != today) {
-
-        lastTriggeredDay = today;
-        return true;
-      }
-
-      return false;
-    }
-
-    bool exists() {
-      return created;
-    }
-
-    bool isEnabled() {
-      return enabled;
-    }
-
-    uint8_t getHour() {
-      return alarmHour;
-    }
-
-    uint8_t getMinute() {
-      return alarmMinute;
-    }
-};
 
 AlarmClock my_alarm;
 
