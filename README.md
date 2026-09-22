@@ -46,10 +46,12 @@ The project is designed as an approachable Arduino IDE project: no cloud account
 | 12 | D5 | GPIO 19 |
 | 13 | D6 | GPIO 18 |
 | 14 | D7 | GPIO 17 |
-| 15 | A / LED+ | 5 V, optionally through a 100–220 Ω resistor |
+| 15 | A / LED+ | 5 V through a 100–220 Ω series resistor |
 | 16 | K / LED− | GND |
 
 Connect the outer potentiometer terminals to **GND** and the LCD supply voltage; connect its centre terminal to LCD **VO** (pin 3).
+
+The LCD backlight is wired as **5 V → 100–220 Ω resistor → LCD A / LED+ (pin 15)**. Connect LCD **K / LED− (pin 16)** directly to GND. The resistor limits the backlight current and protects the LED.
 
 > If the LCD logic is powered from 5 V, a 3.3 V to 5 V level shifter is recommended for RS, E, and D4–D7. Do not feed 5 V into ESP32 GPIO pins.
 
